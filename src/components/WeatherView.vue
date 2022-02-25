@@ -13,12 +13,14 @@
 
       <div class="weather-wrap">
         <div class="location-box">
-          <div class="location">{{ forecasts.name }}, {{forecasts.sys.country}}</div>
-          <div class="date"></div>
+          <div class="location">
+            {{ forecasts.name }}, {{ forecasts.sys.country }}
+          </div>
+          <div class="date">{{ dateBuilder() }}</div>
         </div>
 
         <div class="weather-box">
-          <div class="temp">{{ forecasts.main.temp }}°C</div>
+          <div class="temp">{{ Math.round(forecasts.main.temp) }}°C</div>
           <div class="weather">{{ forecasts.weather[0].main }}</div>
         </div>
       </div>
@@ -38,15 +40,46 @@ export default defineComponent({
     const location = ref("");
     const store = useStore();
     const forecasts = computed<Weather[]>(() => store.state.weater.forecast);
-    function getWeather(e: KeyboardEvent) {
+    const getWeather = (e: KeyboardEvent) => {
       if (e.key == "Enter") {
         const query = location.value;
         location.value = "";
         store.dispatch("weater/getWeathers", query);
       }
-    }
+    };
 
-    return { forecasts, location, getWeather };
+    const dateBuilder = () => {
+      let d = new Date();
+      let months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      let days = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
+      let day = days[d.getDay()];
+      let date = d.getDate();
+      let month = months[d.getMonth()];
+      let year = d.getFullYear();
+      return `${day} ${date} ${month} ${year}`;
+    };
+    return { forecasts, location, getWeather, dateBuilder };
   },
 });
 </script>
@@ -109,6 +142,7 @@ main {
   font-weight: 500;
   text-align: center;
   text-shadow: 1px 3px rgba(0, 0, 0, 0.25);
+  margin-bottom: 19px
 }
 .location-box .date {
   color: #fff;
