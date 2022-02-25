@@ -1,5 +1,5 @@
 <template>
-  <div class="help">
+  <div class="help" :class="forecasts.main.temp > 16 ? 'warm' : ''">
     <main>
       <div class="search-box">
         <input
